@@ -32,7 +32,7 @@ function result() { echo "$1"; exit 0; }
 check_type="$1"
 host="$2"
 port="$3"
-check_timeout="${4:-5}"
+check_timeout="${4:-3}"
 
 ssl_ca_path=/etc/ssl/certs
 
