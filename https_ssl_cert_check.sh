@@ -7,7 +7,7 @@ function error_usage() {
 
 	Script checks SSL cerfificate expiration and validity for HTTPS.
 
-	check_timeout is optional, default 5 seconds.
+	check_timeout is optional, default 3 seconds.
 
 	Output:
 	* expire:
