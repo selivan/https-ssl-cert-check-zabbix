@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function error_usage() {
-	echo -1
+	echo -65535
 	cat >&2 << EOF
 	Usage: $(basename $0) expire|valid hostname port [check_timeout]
 
