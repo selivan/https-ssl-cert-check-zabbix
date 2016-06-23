@@ -12,10 +12,11 @@ function error_usage() {
 	Output:
 	* expire:
 	  * N	number of days left before expiration, 0 or negative if expired
+	  * -65535	failed to get certificate
 	* valid:
 	  * 1	valid
 	  * 0	invalid
-	  * -1	failed to get certificate
+	  * -65535	failed to get certificate
 
 	Return code is always 0, otherwise zabbix agent fails to get item.
 EOF
@@ -23,7 +24,7 @@ EOF
 	exit 0
 }
 
-function error() { echo -1; echo "ERROR: $@" >&2; exit 0; }
+function error() { echo -65535; echo "ERROR: $@" >&2; exit 0; }
 
 function result() { echo "$1"; exit 0; }
 
