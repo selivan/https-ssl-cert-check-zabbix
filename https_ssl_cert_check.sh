@@ -47,8 +47,6 @@ done
 [ "$port" -ge 1 -a "$port" -le 65535 ] || error "Port should be between 1 and 65535"
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
 
-[ -n "$err_message" ] && print_usage "ERROR: $err_message" && exit 255
-
 # Get certificate
 output=$( echo \
 | timeout "$check_timeout" openssl s_client -CApath "$ssl_ca_path" -servername "$host" -connect "$host":"$port" 2>/dev/null )
