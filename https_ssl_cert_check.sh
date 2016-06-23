@@ -18,7 +18,7 @@ function error_usage() {
 	  * 0	invalid
 	  * -65535	failed to get certificate
 
-	Return code is always 0, otherwise zabbix agent fails to get item.
+	Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
 EOF
 
 	exit 0
