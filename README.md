@@ -12,4 +12,7 @@ user@host:~$ ./https_ssl_cert_check.sh expire effective-next-90-days.example.com
 90
 user@host:~$ ./https_ssl_cert_check.sh expire expired.example.com 443
 -37
+user@host:~$ ./https_ssl_cert_check.sh expire unavailable.example.com 443
+-65535
+ERROR: Failed to get certificate
 ```
