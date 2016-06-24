@@ -1,22 +1,25 @@
 #!/bin/bash
 
+default_check_timeout=3
+error_code=-65535
+
 function error_usage() {
-	echo -65535
+	echo $error_code
 	cat >&2 << EOF
 	Usage: $(basename $0) expire|valid hostname port [check_timeout]
 
 	Script checks SSL cerfificate expiration and validity for HTTPS.
 
-	check_timeout is optional, default 3 seconds.
+	check_timeout is optional, default $default_check_timeout seconds.
 
 	Output:
 	* expire:
 	  * N	number of days left before expiration, 0 or negative if expired
-	  * -65535	failed to get certificate
+	  * $error_code	failed to get certificate
 	* valid:
 	  * 1	valid
 	  * 0	invalid
-	  * -65535	failed to get certificate
+	  * $error_code	failed to get certificate
 
 	Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
 EOF
@@ -24,7 +27,7 @@ EOF
 	exit 0
 }
 
-function error() { echo -65535; echo "ERROR: $@" >&2; exit 0; }
+function error() { echo $error_code; echo "ERROR: $@" >&2; exit 0; }
 
 function result() { echo "$1"; exit 0; }
 
@@ -32,7 +35,7 @@ function result() { echo "$1"; exit 0; }
 check_type="$1"
 host="$2"
 port="$3"
-check_timeout="${4:-3}"
+check_timeout="${4:-$default_check_timeout}"
 
 ssl_ca_path=/etc/ssl/certs
 
