@@ -1,4 +1,4 @@
-Script to check validity and expiration of SSL certificate on HTTPS site.
+Script to check validity and expiration of SSL certificate on HTTPS site. May be used with Zabbix(user parameters example included) or standalone.
 
 ```
 user@host:~$ ./https_ssl_cert_check.sh valid valid.example.com 443
