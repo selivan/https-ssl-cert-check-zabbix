@@ -16,3 +16,5 @@ user@host:~$ ./https_ssl_cert_check.sh expire unavailable.example.com 443
 -65535
 ERROR: Failed to get certificate
 ```
+
+**P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
