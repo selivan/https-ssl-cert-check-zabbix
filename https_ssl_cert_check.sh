@@ -3,7 +3,7 @@
 default_check_timeout=3
 error_code=-65535
 
-function error_usage() {
+function show_help() {
 	echo $error_code
 	cat >&2 << EOF
 	Usage: $(basename $0) expire|valid hostname port [check_timeout]
@@ -24,7 +24,6 @@ function error_usage() {
 	Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
 EOF
 
-	exit 0
 }
 
 function error() { echo $error_code; echo "ERROR: $@" >&2; exit 0; }
@@ -44,7 +43,7 @@ for util in timeout openssl date; do
 	which "$util" >/dev/null || error "Not found in \$PATH: $util"
 done
 # Check arguments
-[ "$#" -lt 3 ] && error_usage
+[ "$#" -lt 3 ] && show_help && exit 1
 [ "$check_type" = "expire" -o "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 [ "$port" -ge 1 -a "$port" -le 65535 ] || error "Port should be between 1 and 65535"
