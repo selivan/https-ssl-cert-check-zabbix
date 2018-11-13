@@ -43,7 +43,7 @@ for util in timeout openssl date; do
 	which "$util" >/dev/null || error "Not found in \$PATH: $util"
 done
 # Check arguments
-[ "$#" -lt 3 ] && show_help && exit 1
+[ "$#" -lt 3 ] && show_help && exit 0
 [ "$check_type" = "expire" -o "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 [ "$port" -ge 1 -a "$port" -le 65535 ] || error "Port should be between 1 and 65535"
