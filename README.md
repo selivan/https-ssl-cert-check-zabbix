@@ -1,4 +1,6 @@
-Script to check validity and expiration of TLS/SSL certificate for given host, port and (optional) servername. May be used with Zabbix(user parameters example included) or standalone.
+Script to check validity and expiration of TLS/SSL certificate for given host, port and (optional) servername.
+
+May be used standalone or with Zabbix(user parameters example included).
 
 ```
 user@host:~$ ./ssl_cert_check.sh valid valid.example.com 443
