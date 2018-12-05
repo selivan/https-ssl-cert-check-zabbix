@@ -2,15 +2,18 @@
 
 default_check_timeout=3
 error_code=-65535
+ssl_ca_path=/etc/ssl/certs
 
 function show_help() {
 	echo $error_code
 	cat >&2 << EOF
-	Usage: $(basename $0) expire|valid hostname port [check_timeout]
+	Usage: $(basename $0) expire|valid hostname|ip port [domain] [check_timeout]
 
 	Script checks SSL cerfificate expiration and validity for HTTPS.
 
-	check_timeout is optional, default $default_check_timeout seconds.
+	domain is optional, default is hostname
+
+	check_timeout is optional, default is $default_check_timeout seconds.
 
 	Output:
 	* expire:
@@ -34,14 +37,14 @@ function result() { echo "$1"; exit 0; }
 check_type="$1"
 host="$2"
 port="$3"
-check_timeout="${4:-$default_check_timeout}"
-
-ssl_ca_path=/etc/ssl/certs
+domain="${4:-$host}"
+check_timeout="${5:-$default_check_timeout}"
 
 # Check if required utilites exist
 for util in timeout openssl date; do
-	which "$util" >/dev/null || error "Not found in \$PATH: $util"
+	type "$util" >/dev/null || error "Not found in \$PATH: $util"
 done
+
 # Check arguments
 [ "$#" -lt 3 ] && show_help && exit 0
 [ "$check_type" = "expire" -o "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
@@ -51,7 +54,7 @@ done
 
 # Get certificate
 output=$( echo \
-| timeout "$check_timeout" openssl s_client -CApath "$ssl_ca_path" -servername "$host" -connect "$host":"$port" 2>/dev/null )
+| timeout "$check_timeout" openssl s_client -CApath "$ssl_ca_path" -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 [ $? -ne 0 ] && error "Failed to get certificate"
 
 # Run checks
