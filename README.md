@@ -23,8 +23,8 @@ user@host:~$ ./ssl_cert_check.sh expire unavailable.example.com 443
 -65535
 ERROR: Failed to get certificate
 
-# Check 127.0.0.1:443 for a valid example.com certificate
-# In case example.com is not resolved to 127.0.0.1
+# Check 127.0.0.1:443 for a valid certificate for example.com
+# TLS SNI(Server Name Indication) is set to example.com
 user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com
 1
 ```
