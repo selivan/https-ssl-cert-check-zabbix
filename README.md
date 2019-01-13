@@ -27,6 +27,12 @@ ERROR: Failed to get certificate
 # TLS SNI(Server Name Indication) is set to example.com
 user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com
 1
+
+# Check 127.0.0.1:443 for a valid certificate for example.com
+# TLS SNI(Server Name Indication) is set to example.com
+# Check timeout is 10 seconds(default is 3)
+user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
+1
 ```
 
 **P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
