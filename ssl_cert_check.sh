@@ -7,11 +7,11 @@ ssl_ca_path=/etc/ssl/certs
 function show_help() {
 	echo $error_code
 	cat >&2 << EOF
-	Usage: $(basename "$0") expire|valid hostname|ip port [domain] [check_timeout]
+	Usage: $(basename "$0") expire|valid hostname|ip port [domain for TLS SNI] [check_timeout]
 
 	Script checks SSL cerfificate expiration and validity for HTTPS.
 
-	domain is optional, default is hostname
+	[domain for TLS SNI] is optional, default is hostname
 
 	check_timeout is optional, default is $default_check_timeout seconds.
 
