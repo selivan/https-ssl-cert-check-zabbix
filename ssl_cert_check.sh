@@ -7,24 +7,28 @@ ssl_ca_path=/etc/ssl/certs
 function show_help() {
 	echo $error_code
 	cat >&2 << EOF
-	Usage: $(basename "$0") expire|valid hostname|ip port [domain for TLS SNI] [check_timeout]
+Usage: $(basename "$0") expire|valid hostname|ip port [domain for TLS SNI] [check_timeout]
 
-	Script checks SSL cerfificate expiration and validity for HTTPS.
+Script checks SSL cerfificate expiration and validity for HTTPS.
 
-	[domain for TLS SNI] is optional, default is hostname
+[domain for TLS SNI] is optional, default is hostname
 
-	check_timeout is optional, default is $default_check_timeout seconds.
+check_timeout is optional, default is $default_check_timeout seconds.
 
-	Output:
-	* expire:
-	  * N	number of days left before expiration, 0 or negative if expired
-	  * $error_code	failed to get certificate
-	* valid:
-	  * 1	valid
-	  * 0	invalid
-	  * $error_code	failed to get certificate
+Output:
 
-	Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
+* expire:
+
+  * N	number of days left before expiration, 0 or negative if expired
+  * $error_code	failed to get certificate
+
+* valid:
+
+  * 1	valid
+  * 0	invalid
+  * $error_code	failed to get certificate
+
+Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
 EOF
 
 }
