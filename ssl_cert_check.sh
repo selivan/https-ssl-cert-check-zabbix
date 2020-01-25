@@ -70,10 +70,6 @@ if [ "$check_type" = "expire" ]; then
 	days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
 	result "$days_left"
 elif [ "$check_type" = "valid" ]; then
-	verify_return_code=$( echo "$output" | grep -E '^[ ]*Verify return code:' | tr -s ' ' | cut -d' ' -f5 )
-	if [[ "$verify_return_code" -eq "0" ]]; then
-		result 1
-	else
-		result 0
-	fi
+	verify_return_code=$( echo "$output" | egrep '^[ ]*Verify return code:' | tr -s ' ' | cut -d' ' -f5 )
+	[[ "$verify_return_code" -eq "0" ]] && result 1 || result 0
 fi
