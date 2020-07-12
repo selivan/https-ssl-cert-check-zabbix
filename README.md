@@ -2,17 +2,17 @@ Script to check validity and expiration of TLS/SSL certificate for given host, p
 
 May be used standalone or with Zabbix(user parameters example included).
 
-Usage:
+#### Usage
 
 `ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [connect timeout(seconds)]`
 
-Return values:
+#### Return values
 
 * `1|0`  for validity check: 1 - valid, 0 - invalid, expired or unavailable
 * `N`  number of days left for expiration check. Zero or negative value means certificate is expired
 * `-65535`  site was unavailable for expiration check
 
-Examples:
+#### Examples
 
 ```bash
 user@host:~$ ./ssl_cert_check.sh valid valid.example.com 443
