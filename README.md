@@ -1,6 +1,6 @@
 Script to check validity and expiration of TLS/SSL certificate for given host, port and (optional) servername for TLS SNI.
 
-May be used standalone or with Zabbix(user parameters example included).
+May be used standalone or with Zabbix(see `userparameters_ssl_cert_check.conf`).
 
 #### Usage
 
