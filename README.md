@@ -4,7 +4,10 @@ May be used standalone or with Zabbix(see `userparameters_ssl_cert_check.conf`).
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [connect timeout (seconds)]`
+`ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [check timeout (seconds)]`
+
+* `[domain for TLS SNI]` default is `<hostname or IP>`
+* `[check timeout]` default is 5 seconds
 
 #### Return values
 
@@ -42,7 +45,7 @@ user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com
 
 # Check 127.0.0.1:443 for a valid certificate for example.com
 # TLS SNI(Server Name Indication) is set to example.com
-# Check timeout is 10 seconds(default is 3)
+# Check timeout is 10 seconds(default is 5)
 user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
 1
 ```

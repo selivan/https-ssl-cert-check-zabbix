@@ -1,6 +1,6 @@
 #!/bin/bash
 
-default_check_timeout=3
+default_check_timeout=5
 error_code=-65535
 ssl_ca_path=/etc/ssl/certs
 
@@ -74,6 +74,6 @@ if [ "$check_type" = "expire" ]; then
 	days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
 	result "$days_left"
 elif [ "$check_type" = "valid" ]; then
-	verify_return_code=$( echo "$output" | egrep '^[ ]*Verify return code:' | tr -s ' ' | cut -d' ' -f5 )
+	verify_return_code=$( echo "$output" | egrep '^[ ]*Verify return code:' | sed 's/^ *//' | tr -s ' ' | cut -d' ' -f4 )
 	[[ "$verify_return_code" -eq "0" ]] && result 1 || result 0
 fi
