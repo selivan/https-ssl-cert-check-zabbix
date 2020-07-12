@@ -4,7 +4,7 @@ May be used standalone or with Zabbix(user parameters example included).
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [connect timeout(seconds)]`
+`ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [connect timeout (seconds)]`
 
 #### Return values
 
