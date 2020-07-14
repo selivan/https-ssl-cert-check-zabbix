@@ -6,7 +6,8 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 `ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [check timeout (seconds)]`
 
-* `[domain for TLS SNI]` optional, default is `<hostname or IP>`. [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
+* `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
+[SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout]` optional, default is 5 seconds
 
 #### Return values
