@@ -51,4 +51,9 @@ user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
 1
 ```
 
+#### Using with busybox, like Alpine-based Docker images
+
+Busybox `date` can not parse date format from `openssl`. If you are using busybox, for example for Alpine-based Docker images, install `coreutils` package.
+
+
 **P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
