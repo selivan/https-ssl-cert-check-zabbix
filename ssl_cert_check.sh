@@ -49,6 +49,11 @@ for util in timeout openssl date; do
 	type "$util" >/dev/null || error "Not found in \$PATH: $util"
 done
 
+# Check that busybox date isn't used: it does not support requited date format
+if date --version 2>&1 | grep -qi 'busybox'; then
+	error "Busybox date does not support parsing required date format. date from coreutils package is required"
+fi
+
 # Check arguments
 [ "$#" -lt 3 ] && show_help && exit 0
 [ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
