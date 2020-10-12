@@ -7,13 +7,15 @@ ssl_ca_path=/etc/ssl/certs
 function show_help() {
 	echo $error_code
 	cat >&2 << EOF
-Usage: $(basename "$0") expire|valid hostname|ip port [domain for TLS SNI] [check_timeout]
+Usage: $(basename "$0") expire|valid hostname|ip [port] [domain for TLS SNI] [check_timeout]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
+[port] is optional, default is 443
+
 [domain for TLS SNI] is optional, default is hostname
 
-check_timeout is optional, default is $default_check_timeout seconds.
+[check_timeout] is optional, default is $default_check_timeout seconds.
 
 Output:
 
@@ -40,7 +42,7 @@ function result() { echo "$1"; exit 0; }
 # Arguments
 check_type="$1"
 host="$2"
-port="$3"
+port="${3:-443}"
 domain="${4:-$host}"
 check_timeout="${5:-$default_check_timeout}"
 
@@ -55,7 +57,7 @@ if date --version 2>&1 | grep -qi 'busybox'; then
 fi
 
 # Check arguments
-[ "$#" -lt 3 ] && show_help && exit 0
+[ "$#" -lt 2 ] && show_help && exit 0
 [ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 { [ "$port" -ge 1 ] && [ "$port" -le 65535 ]; } || error "Port should be between 1 and 65535"
