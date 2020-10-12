@@ -4,8 +4,9 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> <port> [domain for TLS SNI] [check timeout (seconds)]`
+`ssl_cert_check.sh valid|expire <hostname or IP> [port] [domain for TLS SNI] [check timeout (seconds)]`
 
+* `[port]` default is 443
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout]` optional, default is 5 seconds
@@ -19,23 +20,26 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 #### Examples
 
 ```bash
-user@host:~$ ./ssl_cert_check.sh valid valid.example.com 443
+user@host:~$ ./ssl_cert_check.sh valid valid.example.com
 1
 
-user@host:~$ ./ssl_cert_check.sh valid invalid.example.com 443
+user@host:~$ ./ssl_cert_check.sh valid imap.valid.example.com 993
+1
+
+user@host:~$ ./ssl_cert_check.sh valid invalid.example.com
 0
 
 # Expired certificate is not valid
-user@host:~$ ./ssl_cert_check.sh valid expired.example.com 443
+user@host:~$ ./ssl_cert_check.sh valid expired.example.com
 0
 
-user@host:~$ ./ssl_cert_check.sh expire effective-next-90-days.example.com 443
+user@host:~$ ./ssl_cert_check.sh expire effective-next-90-days.example.com
 90
 
-user@host:~$ ./ssl_cert_check.sh expire expired-37-days-ago.example.com 443
+user@host:~$ ./ssl_cert_check.sh expire expired-37-days-ago.example.com
 -37
 
-user@host:~$ ./ssl_cert_check.sh expire unavailable.example.com 443
+user@host:~$ ./ssl_cert_check.sh expire unavailable.example.com
 -65535
 ERROR: Failed to get certificate
 
