@@ -9,7 +9,7 @@ function show_help() {
 	cat >&2 << EOF
 Usage: $(basename "$0") expire|valid hostname|ip port [domain for TLS SNI] [check_timeout]
 
-Script checks SSL cerfificate expiration and validity for HTTPS.
+Script checks SSL certificate expiration and validity for HTTPS.
 
 [domain for TLS SNI] is optional, default is hostname
 
@@ -28,7 +28,7 @@ Output:
   * 0	invalid
   * $error_code	failed to get certificate
 
-Return code is always 0, otherwise zabbix agent fails to get item value and triggres would not work.
+Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work.
 EOF
 
 }
@@ -44,7 +44,7 @@ port="$3"
 domain="${4:-$host}"
 check_timeout="${5:-$default_check_timeout}"
 
-# Check if required utilites exist
+# Check if required utilities exist
 for util in timeout openssl date; do
 	type "$util" >/dev/null || error "Not found in \$PATH: $util"
 done
