@@ -15,7 +15,7 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 * `1|0`  for validity check: 1 - valid, 0 - invalid, expired or unavailable
 * `N`  number of days left for expiration check. Zero or negative value means certificate is expired
-* `-65535`  site was unavailable for expiration check
+* `-65535`  site was unavailable for expiration check or incorrect script parameters
 
 #### Examples
 
