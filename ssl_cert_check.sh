@@ -22,13 +22,13 @@ Output:
 * expire:
 
   * N	number of days left before expiration, 0 or negative if expired
-  * $error_code	failed to get certificate
+  * $error_code	failed to get certificate or incorrect parameters
 
 * valid:
 
   * 1	valid
   * 0	invalid
-  * $error_code	failed to get certificate
+  * $error_code	failed to get certificate or incorrect parameters
 
 Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work.
 EOF
