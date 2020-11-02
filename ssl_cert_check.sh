@@ -2,7 +2,6 @@
 
 default_check_timeout=5
 error_code=-65535
-ssl_ca_path=/etc/ssl/certs
 
 function show_help() {
 	echo $error_code
@@ -65,7 +64,7 @@ fi
 
 # Get certificate
 if ! output=$( echo \
-| timeout "$check_timeout" openssl s_client -CApath "$ssl_ca_path" -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
+| timeout "$check_timeout" openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 then
 	error "Failed to get certificate"
 fi
