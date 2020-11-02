@@ -82,5 +82,5 @@ if [ "$check_type" = "expire" ]; then
 	result "$days_left"
 elif [ "$check_type" = "valid" ]; then
 	verify_return_code=$( echo "$output" | grep -E '^[ ]*Verify return code:' | sed 's/^ *//' | tr -s ' ' | cut -d' ' -f4 )
-	if [[ "$verify_return_code" -eq "0" ]]; then result 1; else result 0; fi
+	if [ "$verify_return_code" = "0" ]; then result 1; else result 0; fi
 fi
