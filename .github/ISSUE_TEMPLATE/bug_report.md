@@ -14,7 +14,7 @@ assignees: ''
 
 ```
 
-Operating System: <!--- OS you are running the script  -->
+Operating System: <!--- OS you are using to run the script  -->
 
 ### Expected Behavior
 
