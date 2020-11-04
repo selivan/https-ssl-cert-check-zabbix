@@ -32,9 +32,7 @@ $host      host address, usually the same as `$domain`
 $port      port to check TLS/SSL, usually 443
 -->
 
-`openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port"`
-
-says:
+`openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port"` says:
 
 ```
 
