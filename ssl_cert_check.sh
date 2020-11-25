@@ -5,6 +5,9 @@ error_code=-65535
 
 function show_help() {
 	echo $error_code
+	# if running on ternimal, show error
+	# without terminal(from zabbix) this will create an unsupported item because return value is stdout + stderr
+	if [ -t 1 ]; then
 	cat >&2 << EOF
 Usage: $(basename "$0") expire|valid hostname|ip [port] [domain for TLS SNI] [check_timeout]
 
@@ -31,6 +34,7 @@ Output:
 
 Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work.
 EOF
+	fi
 
 }
 
