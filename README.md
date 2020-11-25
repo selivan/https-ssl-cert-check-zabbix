@@ -39,6 +39,8 @@ user@host:~$ ./ssl_cert_check.sh expire effective-next-90-days.example.com
 user@host:~$ ./ssl_cert_check.sh expire expired-37-days-ago.example.com
 -37
 
+# NOTE: an error message is shown to stderr only when running on a terminal
+# Without terminal(from zabbix), only the result is printed to stdout
 user@host:~$ ./ssl_cert_check.sh expire unavailable.example.com
 -65535
 ERROR: Failed to get certificate
