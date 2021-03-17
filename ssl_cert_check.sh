@@ -15,6 +15,8 @@ Script checks SSL certificate expiration and validity for HTTPS.
 
 [port] is optional, default is 443
 
+[starttls protocol] is optional, default is "tls"
+
 [domain for TLS SNI] is optional, default is hostname
 
 [check_timeout] is optional, default is $default_check_timeout seconds.
@@ -46,8 +48,14 @@ function result() { echo "$1"; exit 0; }
 check_type="$1"
 host="$2"
 port="${3:-443}"
-domain="${4:-$host}"
-check_timeout="${5:-$default_check_timeout}"
+protocol="${4:-tls}"
+domain="${5:-$host}"
+check_timeout="${6:-$default_check_timeout}"
+
+starttls=""
+if [ "$protocol" != "tls" ]; then
+	starttls="-starttls $protocol"
+fi
 
 # Check if required utilities exist
 for util in timeout openssl date; do
@@ -68,7 +76,7 @@ fi
 
 # Get certificate
 if ! output=$( echo \
-| timeout "$check_timeout" openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
+| timeout "$check_timeout" openssl s_client $starttls -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 then
 	error "Failed to get certificate"
 fi
