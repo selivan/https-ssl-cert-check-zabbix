@@ -18,6 +18,10 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 * `N`  number of days left for expiration check. Zero or negative value means certificate is expired
 * `-65535`  site was unavailable for expiration check or incorrect script parameters
 
+Exit code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. 
+
+If script is running without terminal(from zabbix), error messages are not printed, only exit code. The reason is that zabbix merges stdout and strerr to get item value.
+
 #### Examples
 
 ```bash
