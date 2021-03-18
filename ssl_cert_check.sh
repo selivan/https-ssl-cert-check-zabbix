@@ -9,6 +9,7 @@ function show_help() {
 	# without terminal(from zabbix) this will create an unsupported item because return value is stdout + stderr
 	if [ -t 1 ]; then
 	cat >&2 << EOF
+
 Usage: $(basename "$0") expire|valid hostname|ip [port][/starttls protocol] [domain for TLS SNI] [check_timeout]
 
 Script checks SSL certificate expiration and validity for HTTPS.
