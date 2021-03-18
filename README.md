@@ -4,10 +4,10 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> [port][/starttls protocol] [domain for TLS SNI] [check timeout (seconds)]`
+`ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)]`
 
 * `[port]` optional, default is 443
-* `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols
+* `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
