@@ -1,4 +1,4 @@
-Script to check validity and expiration of TLS/SSL certificate for given host, port and (optional) servername for TLS SNI.
+Script to check validity and expiration of TLS/SSL certificate on remote host. Supports TLS SNI and STARTTLS for protocols like SMTP.
 
 May be used standalone or with Zabbix. See example of integration in `userparameters_ssl_cert_check.conf` and [zabbix manual](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) about user parameters.
 
