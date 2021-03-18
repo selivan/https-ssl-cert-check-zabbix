@@ -9,11 +9,13 @@ function show_help() {
 	# without terminal(from zabbix) this will create an unsupported item because return value is stdout + stderr
 	if [ -t 1 ]; then
 	cat >&2 << EOF
-Usage: $(basename "$0") expire|valid hostname|ip [port] [domain for TLS SNI] [check_timeout]
+Usage: $(basename "$0") expire|valid hostname|ip [port][/[starttls protocol]] [domain for TLS SNI] [check_timeout]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
 [port] is optional, default is 443
+
+[starttls protocol] is optional, default is "tls". See "man s_client" for supported values.
 
 [domain for TLS SNI] is optional, default is hostname
 
@@ -42,12 +44,26 @@ function error() { echo $error_code; echo "ERROR: $*" >&2; exit 0; }
 
 function result() { echo "$1"; exit 0; }
 
+
 # Arguments
 check_type="$1"
 host="$2"
 port="${3:-443}"
 domain="${4:-$host}"
 check_timeout="${5:-$default_check_timeout}"
+
+starttls=""
+starttls_proto=""
+
+IFS='/' split=($port)
+
+if [ ${#split[@]} -gt 1 ]; then
+	port="${split[0]}"
+	if [ "${split[1]}" != "tls" ]; then
+		starttls="-starttls"
+		starttls_proto="${split[1]}"
+	fi
+fi
 
 # Check if required utilities exist
 for util in timeout openssl date; do
@@ -64,11 +80,14 @@ fi
 [ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 { [ "$port" -ge 1 ] && [ "$port" -le 65535 ]; } || error "Port should be between 1 and 65535"
+if [ ! -z "$starttls_proto" ]; then
+	[[ "$starttls_proto" =~ ^[a-z0-9]+$ ]] || error "Starttls protocol should be an identifier"
+fi
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
 
 # Get certificate
 if ! output=$( echo \
-| timeout "$check_timeout" openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
+| timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 then
 	error "Failed to get certificate"
 fi
