@@ -7,7 +7,7 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 `ssl_cert_check.sh valid|expire <hostname or IP> [port][/[starttls protocol]] [domain for TLS SNI] [check timeout (seconds)]`
 
 * `[port]` optional, default is 443
-* `[starttls protocol]` is optional, default is "tls". See "man s_client" for supported values.
+* `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
@@ -27,12 +27,7 @@ user@host:~$ ./ssl_cert_check.sh valid valid.example.com
 user@host:~$ ./ssl_cert_check.sh valid imap.valid.example.com 993
 1
 
-# SMTP on port 25 reqires STARTTLS. It is necessary to specify the protocol
-# to use STARTTLS. Supported protocols depend on the openssl version used.
-# For recent openssl versions the following protocols are supported:
-#  smtp, pop3, imap, ftp, xmpp, xmpp-server, irc, postgres, mysql,
-#  lmtp, nntp, sieve, ldap
-# For more details about supported protocols refer to "man s_client"
+# SMTP on port 25 with STARTTLS to switch to TLS communication
 user@host:~$ ./ssl_cert_check.sh valid smtp.valid.example.com 25/smtp
 1
 
