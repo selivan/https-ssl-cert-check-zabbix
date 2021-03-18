@@ -4,7 +4,7 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> [port][/[starttls protocol]] [domain for TLS SNI] [check timeout (seconds)]`
+`ssl_cert_check.sh valid|expire <hostname or IP> [port][/starttls protocol] [domain for TLS SNI] [check timeout (seconds)]`
 
 * `[port]` optional, default is 443
 * `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols
