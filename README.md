@@ -20,7 +20,7 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 
 Exit code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. 
 
-If script is running without terminal(from zabbix), error messages are not printed, only exit code. The reason is that zabbix merges stdout and strerr to get item value.
+If the script is running without terminal(from zabbix), error messages are not printed, only exit code. The reason is that zabbix merges stdout and strerr to get item value.
 
 #### Examples
 
