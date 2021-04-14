@@ -35,7 +35,7 @@ Output:
   * 0	invalid
   * $error_code	failed to get certificate or incorrect parameters
 
-Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work.
+Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. Note: error messages are not printed when running not on a terninal, so that script result from zabbix is always a correct integer.
 EOF
 	fi
 
