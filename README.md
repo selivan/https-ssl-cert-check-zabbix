@@ -15,8 +15,10 @@ May be used standalone or with Zabbix. For more info see zabbix template section
 #### Zabbix template
 There are two options how to use this script in zabbix:
 
+Script (ssl_cert_check.sh) itself should go to /usr/local/bin
+
 zabbix_basic - basic template and userparameter for monitoring of one SSL cert per host
-* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d
+* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d on host
 * import template in zabbix server, assign to host, fill macros on that host
 
 zabbix_advanced - advanced template and userparameter for monitoring of multiple ssl certs per hosts
