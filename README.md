@@ -2,6 +2,8 @@ Script to check validity and expiration of TLS/SSL certificate on remote host. S
 
 May be used standalone or with Zabbix. See example of integration in `userparameters_ssl_cert_check.conf` and [zabbix manual](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) about user parameters.
 
+For zabbix, there is also template available in zabbix_template.xml
+
 #### Usage
 
 `ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)]`
