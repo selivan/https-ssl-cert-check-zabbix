@@ -1,6 +1,6 @@
 Script to check validity and expiration of TLS/SSL certificate on remote host. Supports TLS SNI and STARTTLS for protocols like SMTP.
 
-May be used standalone or with Zabbix. For more info see zabbix template section below
+May be used standalone or with Zabbix. See the "Zabbix integration" section below.
 
 #### Usage
 
@@ -12,21 +12,6 @@ May be used standalone or with Zabbix. For more info see zabbix template section
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
 
-#### Zabbix template
-There are two options how to use this script in zabbix:
-
-Script (ssl_cert_check.sh) itself should go to /usr/local/bin
-
-zabbix_basic - basic template and userparameter for monitoring of one SSL cert per host
-* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d on host
-* import template in zabbix server, assign to host, fill macros on that host
-
-zabbix_advanced - advanced template and userparameter for monitoring of multiple ssl certs per hosts
-* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d
-* copy and modify ssl_cert_list into /etc/zabbix/scripts/ssl_cert_list
-* import template in zabbix server, assign to host, either run discovery or wait
-
-For more info about user-parameters, read [zabbix manual](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) about user parameters.
 #### Return values
 
 * `1|0`  for validity check: 1 - valid, 0 - invalid, expired or unavailable
@@ -35,7 +20,7 @@ For more info about user-parameters, read [zabbix manual](https://www.zabbix.com
 
 Exit code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. 
 
-If the script is running without terminal(from zabbix), error messages are not printed, only exit code. The reason is that zabbix merges stdout and strerr to get item value.
+If the script is running without terminal(from zabbix), error messages are not printed, only exit code. The reason is that zabbix merges stdout and strerr to get an item value.
 
 #### Examples
 
@@ -81,9 +66,25 @@ user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
 1
 ```
 
+#### Zabbix integration
+
+Example of Zabbix [user parameters](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) is in `userparameters_ssl_cert_check.conf`.
+
+You can write your own template or use one of two example templates in `zabbix_template_examples` directory.
+
+`basic` - basic template and userparameter for monitoring of one SSL cert per host
+
+* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d on host
+* import template in zabbix server, assign to host, fill macros on that host
+
+`advanced` - advanced template and userparameter for monitoring of multiple ssl certs per hosts
+
+* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d
+* copy and modify ssl_cert_list into /etc/zabbix/scripts/ssl_cert_list
+* import template in zabbix server, assign to host, either run discovery or wait
+
 #### Using with busybox, like Alpine-based Docker images
 
 Busybox `date` can not parse date format from `openssl`. If you are using the script in busybox, for example in Alpine-based Docker images, install `coreutils` and `bash` packages.
-
 
 **P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
