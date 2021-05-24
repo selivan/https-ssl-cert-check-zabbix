@@ -1,6 +1,6 @@
 Script to check validity and expiration of TLS/SSL certificate on remote host. Supports TLS SNI and STARTTLS for protocols like SMTP.
 
-May be used standalone or with Zabbix. See example of integration in `userparameters_ssl_cert_check.conf` and [zabbix manual](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) about user parameters.
+May be used standalone or with Zabbix. For more info see zabbix template section below
 
 #### Usage
 
@@ -12,6 +12,21 @@ May be used standalone or with Zabbix. See example of integration in `userparame
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
 
+#### Zabbix template
+There are two options how to use this script in zabbix:
+
+Script (ssl_cert_check.sh) itself should go to /usr/local/bin
+
+zabbix_basic - basic template and userparameter for monitoring of one SSL cert per host
+* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d on host
+* import template in zabbix server, assign to host, fill macros on that host
+
+zabbix_advanced - advanced template and userparameter for monitoring of multiple ssl certs per hosts
+* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d
+* copy and modify ssl_cert_list into /etc/zabbix/scripts/ssl_cert_list
+* import template in zabbix server, assign to host, either run discovery or wait
+
+For more info about user-parameters, read [zabbix manual](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) about user parameters.
 #### Return values
 
 * `1|0`  for validity check: 1 - valid, 0 - invalid, expired or unavailable
