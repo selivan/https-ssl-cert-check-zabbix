@@ -89,6 +89,6 @@ Busybox `date` can not parse date format from `openssl`. If you are using the sc
 
 #### Support for Internationalized Domain Names with Punycode
 
-If `idn` executable([libidn](https://www.gnu.org/software/libidn/)) is available, unicode host and domain names be will supported by converting to [Punycode](https://en.wikipedia.org/wiki/Punycode) representation.
+If `idn` executable([libidn](https://www.gnu.org/software/libidn/)) is available, unicode host and domain names be will supported by converting to [Punycode](https://en.wikipedia.org/wiki/Punycode) representation. Absence of `idn` does not break the script, but unicode domains will not be supported.
 
 **P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
