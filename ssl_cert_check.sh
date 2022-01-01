@@ -86,6 +86,13 @@ if [ ! -z "$starttls_proto" ]; then
 fi
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
 
+# Support for IDN(internationalized domain names) with Punycode
+# Requires libidn(https://www.gnu.org/software/libidn/)
+if type -f idn > /dev/null; then
+	host="$(echo $host | idn 2>/dev/null || echo $host)"
+	domain="$(echo $domain | idn 2>/dev/null || echo $domain)"
+fi
+
 # Get certificate
 if ! output=$( echo \
 | timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )

@@ -1,4 +1,4 @@
-Script to check validity and expiration of TLS/SSL certificate on remote host. Supports TLS SNI and STARTTLS for protocols like SMTP.
+Script to check validity and expiration of TLS/SSL certificate on remote host. Supports TLS SNI and STARTTLS for protocols like SMTP. Supports internationalized domain names with Punycode(uses [libidn](https://www.gnu.org/software/libidn/)).
 
 May be used standalone or with Zabbix. See the "Zabbix integration" section below.
 
@@ -86,5 +86,9 @@ You can write your own template or use one of two example templates in `zabbix_t
 #### Using with busybox, like Alpine-based Docker images
 
 Busybox `date` can not parse date format from `openssl`. If you are using the script in busybox, for example in Alpine-based Docker images, install `coreutils` and `bash` packages.
+
+#### Support for Internationalized Domain Names with Punycode
+
+If `idn` executable([libidn](https://www.gnu.org/software/libidn/)) is available, unicode host and domain names be will supported by converting to [Punycode](https://en.wikipedia.org/wiki/Punycode) representation.
 
 **P.S.** If this code is useful for you - don't forget to put a star on it's [github repo](https://github.com/selivan/https-ssl-cert-check-zabbix).
