@@ -6,8 +6,6 @@ May be used standalone or with Zabbix. See the "Zabbix integration" section belo
 
 `ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)]`
 
-* `valid|expire` check certificate for validity or expiration
-* `<hostname or IP>`
 * `[port]` optional, default is 443
 * `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
