@@ -56,7 +56,7 @@ check_timeout="${5:-$default_check_timeout}"
 starttls=""
 starttls_proto=""
 
-IFS='/' read -a split <<< $port
+IFS='/' read -r -a split <<< "${port}"
 
 if [ ${#split[@]} -gt 1 ]; then
 	port="${split[0]}"
