@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 default_check_timeout=5
 error_code=-65535
