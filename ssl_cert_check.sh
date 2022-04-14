@@ -81,7 +81,7 @@ fi
 [ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 { [ "$port" -ge 1 ] && [ "$port" -le 65535 ]; } || error "Port should be between 1 and 65535"
-if [ ! -z "$starttls_proto" ]; then
+if [ -n "$starttls_proto" ]; then
 	[[ "$starttls_proto" =~ ^[a-z0-9]+$ ]] || error "Starttls protocol should be an identifier"
 fi
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
