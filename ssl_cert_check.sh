@@ -89,8 +89,8 @@ fi
 # Support for IDN(internationalized domain names) with Punycode
 # Requires libidn(https://www.gnu.org/software/libidn/)
 if type -f idn > /dev/null; then
-	host="$(echo $host | idn 2>/dev/null || echo $host)"
-	domain="$(echo $domain | idn 2>/dev/null || echo $domain)"
+	host="$(echo 		"${host}" 	| idn 2>/dev/null || echo "${host}"		)"
+	domain="$(echo 	"${domain}" | idn 2>/dev/null || echo "${domain}"	)"
 fi
 
 # Get certificate
