@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 default_check_timeout=5
 error_code=-65535
@@ -56,7 +56,7 @@ check_timeout="${5:-$default_check_timeout}"
 starttls=""
 starttls_proto=""
 
-IFS='/' read -a split <<< $port
+IFS='/' read -r -a split <<< "${port}"
 
 if [ ${#split[@]} -gt 1 ]; then
 	port="${split[0]}"
@@ -81,7 +81,7 @@ fi
 [ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 { [ "$port" -ge 1 ] && [ "$port" -le 65535 ]; } || error "Port should be between 1 and 65535"
-if [ ! -z "$starttls_proto" ]; then
+if [ -n "$starttls_proto" ]; then
 	[[ "$starttls_proto" =~ ^[a-z0-9]+$ ]] || error "Starttls protocol should be an identifier"
 fi
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
@@ -89,11 +89,12 @@ fi
 # Support for IDN(internationalized domain names) with Punycode
 # Requires libidn(https://www.gnu.org/software/libidn/)
 if type -f idn > /dev/null; then
-	host="$(echo $host | idn 2>/dev/null || echo $host)"
-	domain="$(echo $domain | idn 2>/dev/null || echo $domain)"
+	host="$(echo 		"${host}" 	| idn 2>/dev/null || echo "${host}"		)"
+	domain="$(echo 	"${domain}" | idn 2>/dev/null || echo "${domain}"	)"
 fi
 
 # Get certificate
+# shellcheck disable=SC2086
 if ! output=$( echo \
 | timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 then
