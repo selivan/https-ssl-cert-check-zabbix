@@ -94,6 +94,7 @@ if type -f idn > /dev/null; then
 fi
 
 # Get certificate
+# shellcheck disable=SC2086
 if ! output=$( echo \
 | timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
 then
