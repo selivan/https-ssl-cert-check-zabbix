@@ -66,6 +66,10 @@ user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com
 user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
 1
 
+# Check a certificate on an endpoint only accepting TLS 1.2 without setting a TLS version, which will use TLS 1.2 automatically.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10
+1
+
 # Check a certificate on an endpoint only accepting TLS 1.2 and use TLS 1.2, which is valid.
 user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 1.2
 1
