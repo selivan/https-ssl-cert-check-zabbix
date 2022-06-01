@@ -11,7 +11,7 @@ May be used standalone or with Zabbix. See the "Zabbix integration" section belo
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
-* `[tls_version]` optional, if it is not given a TLS version will be negotiated. Override the TLS version as you need, like: 1, 1.1, 1.2, 1.3. See "man s_client" for supported TLS versions.
+* `[tls_version]` optional, if it is not given a TLS version will be negotiated. Override the TLS version as you need, like: tls1, tls1_1, tls1_2, tls1_3 and so on. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options.
 
 #### Return values
 
@@ -71,11 +71,11 @@ user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.
 1
 
 # Check a certificate on an endpoint only accepting TLS 1.2 and use TLS 1.2, which is valid.
-user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 1.2
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_2
 1
 
 # Check a certificate on an endpoint only accepting TLS 1.2, but use TLS 1.1, which is invalid.
-user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 1.1
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_1
 -65535
 ERROR: Failed to get certificate
 ```
