@@ -10,7 +10,7 @@ function show_help() {
 	if [ -t 1 ]; then
 	cat >&2 << EOF
 
-Usage: $(basename "$0") expire|valid hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout]
+Usage: $(basename "$0") expire|valid hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version[/sctp]]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
@@ -22,7 +22,7 @@ Script checks SSL certificate expiration and validity for HTTPS.
 
 [check_timeout] is optional, default is $default_check_timeout seconds
 
-[tls_version] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: tls1, tls1_1, tls1_2, tls1_3. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options.
+[tls_version[/sctp]] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: `tls1_2`, `tls1_3`, `no_tls1`, `dtls`. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options. Use `dtls` options with `/sctp` suffix to set using SCTP for the transport protocol for DTLS: `dtls1_2/sctp`
 
 Output:
 
@@ -96,9 +96,21 @@ if type idn > /dev/null 2>&1; then
 	domain="$(echo 	"${domain}" | idn 2>/dev/null || echo "${domain}"	)"
 fi
 
-# Verify if a TLS (or very old SSL) version is set, to append it a dash.
+# Verify if a TLS version option is set, to append it with a dash.
 if [[ ! -z "$tls_version" && (("$tls_version" == *"tls"* || "$tls_version" == *"ssl"* || "$tls_version" == *"dtls"*)) ]]; then
 	tls_version="-${tls_version}"
+
+	# Check for dtls/sctp option
+	IFS='/' read -r -a split <<< "${tls_version}"
+	if [ ${#split[@]} -gt 1 ]; then
+		tls_version="${split[0]}"
+		if [ "${split[1]}" == "sctp" ]; then
+			tls_version="${split[0]} -sctp"
+		else
+			"tls_version="${split[0]}"
+		fi
+	fi
+
 else
 	tls_version=""
 fi
