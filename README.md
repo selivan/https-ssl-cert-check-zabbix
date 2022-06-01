@@ -14,6 +14,10 @@ user@host:~$ ./ssl_cert_check.sh valid google.com
 user@host:~$ ./ssl_cert_check.sh expire 74.125.131.138 443 google.com 15 tls1_2
 56
 
+# JSON output of the certificate
+user@host:~$ ./ssl_cert_check.sh json google.com
+{"expire_days": 56, "valid": 1, "return_code": 0, "return_text": "ok"}
+
 ```
 
 - [Usage](#usage)
@@ -25,7 +29,7 @@ user@host:~$ ./ssl_cert_check.sh expire 74.125.131.138 443 google.com 15 tls1_2
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)] [tls_version]`
+`ssl_cert_check.sh valid|expire|json <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)] [tls_version]`
 
 * `[port]` optional, default is 443
 * `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
@@ -36,9 +40,18 @@ user@host:~$ ./ssl_cert_check.sh expire 74.125.131.138 443 google.com 15 tls1_2
 
 #### Return values
 
+##### `expire` or `valid`
 * `1|0`  for validity check: 1 - valid, 0 - invalid, expired or unavailable
 * `N`  number of days left for expiration check. Zero or negative value means certificate is expired
 * `-65535`  site was unavailable for check timeout or incorrect script parameters
+
+##### `json`: JSON output
+* JSON object with a summary of the result, which can be used by Zabbix (JSONPath)
+	* `expire_days`: the amount of days before the certificate is expired
+	* `valid`: see `valid` check
+	* `return_code`: the OpenSSL return code
+	* `return_text`: the OpenSSL return text which gives helpful insights
+* $error_code	failed to get certificate or incorrect parameters
 
 Exit code is always 0, otherwise zabbix agent fails to get the item value.
 
@@ -70,6 +83,10 @@ user@host:~$ ./ssl_cert_check.sh expire google.com
 user@host:~$ ./ssl_cert_check.sh expire expired.badssl.com
 -2606
 
+# JSON output of the certificate (can be combined with/piped to `jq`)
+user@host:~$ ./ssl_cert_check.sh json google.com
+{"expire_days": 56, "valid": 1, "return_code": 0, "return_text": "ok"}
+
 # NOTE: an error message is shown to stderr only when running on a terminal
 # Without terminal(from zabbix), only the result is printed to stdout
 user@host:~$ ./ssl_cert_check.sh expire unavailable.example.com
@@ -90,7 +107,6 @@ user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.
 user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_1
 -65535
 ERROR: Failed to get certificate
-
 ```
 
 #### Zabbix integration

@@ -10,7 +10,7 @@ function show_help() {
 	if [ -t 1 ]; then
 	cat >&2 << EOF
 
-Usage: $(basename "$0") expire|valid hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout]
+Usage: $(basename "$0") expire|valid|json hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
@@ -37,6 +37,15 @@ Output:
   * 0	invalid
   * $error_code	failed to get certificate or incorrect parameters
 
+* json:
+
+  * JSON object with a summary of the result, which can be used by Zabbix (JSONPath)
+	* expire_days: the amount of days before the certificate is expired
+	* valid: see `valid` check
+	* return_code: the OpenSSL return code
+	* return_text: the OpenSSL return text which gives helpful insights
+  * $error_code	failed to get certificate or incorrect parameters
+
 Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. Note: error messages are not printed when running not on a terninal, so that script result from zabbix is always a correct integer.
 EOF
 	fi
@@ -47,6 +56,17 @@ function error() { echo $error_code; if [ -t 1 ]; then echo "ERROR: $*" >&2; fi;
 
 function result() { echo "$1"; exit 0; }
 
+function get_expire_days() {
+	expire_date=$( echo "$output" \
+	| openssl x509 -noout -dates \
+	| grep '^notAfter' | cut -d'=' -f2 )
+
+	expire_date_epoch=$(date -d "$expire_date" +%s) || error "Failed to get expire date"
+	current_date_epoch=$(date +%s)
+	days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
+
+	echo $days_left
+}
 
 # Arguments
 check_type="$1"
@@ -81,7 +101,7 @@ fi
 
 # Check arguments
 [ "$#" -lt 2 ] && show_help && exit 0
-[ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || error "Wrong check type. Should be one of: expire,valid"
+[ "$check_type" = "expire" ] || [ "$check_type" = "valid" ] || [ "$check_type" = "json" ] || error "Wrong check type. Should be one of: expire,valid,json"
 [[ "$port" =~ ^[0-9]+$ ]] || error "Port should be a number"
 { [ "$port" -ge 1 ] && [ "$port" -le 65535 ]; } || error "Port should be between 1 and 65535"
 if [ -n "$starttls_proto" ]; then
@@ -113,16 +133,20 @@ fi
 
 # Run checks
 if [ "$check_type" = "expire" ]; then
-	expire_date=$( echo "$output" \
-	| openssl x509 -noout -dates \
-	| grep '^notAfter' | cut -d'=' -f2 )
-
-	expire_date_epoch=$(date -d "$expire_date" +%s) || error "Failed to get expire date"
-	current_date_epoch=$(date +%s)
-	days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
-	result "$days_left"
-elif [ "$check_type" = "valid" ]; then
+	result $(get_expire_days)
+elif [[ "$check_type" = "valid" || "$check_type" = "json" ]]; then
 	# Note: new openssl versions can print multiple return codes for post-handshake session tickets, so we need to get only the first one
 	verify_return_code=$( echo "$output" | grep -E '^ *Verify return code:' | sed -n 1p | sed 's/^ *//' | tr -s ' ' | cut -d' ' -f4 )
-	if [ "$verify_return_code" -eq "0" ]; then result 1; else result 0; fi
+	verify_return_text=$( echo "$output" | grep -E '^ *Verify return code:' | sed -n 1p | sed 's/^ *//' | tr -s ' ' | grep -Eo "\(.*\)" | sed 's/(//g; s/)//g' )
+	if [ "$verify_return_code" -eq "0" ]; then valid=1; else valid=0; fi
+
+	case "$check_type" in
+		"valid")
+			 result $valid
+			 ;;
+		"json")
+			days=$(get_expire_days)
+			result "{\"expire_days\": ${days}, \"valid\": ${valid}, \"return_code\": ${verify_return_code}, \"return_text\": \"${verify_return_text}\"}"
+			;;
+	esac
 fi
