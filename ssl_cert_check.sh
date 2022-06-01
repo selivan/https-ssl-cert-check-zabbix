@@ -22,6 +22,8 @@ Script checks SSL certificate expiration and validity for HTTPS.
 
 [check_timeout] is optional, default is $default_check_timeout seconds
 
+[tls_version] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: tls1, tls1_1, tls1_2, tls1_3. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options.
+
 Output:
 
 * expire:
@@ -52,6 +54,7 @@ host="$2"
 port="${3:-443}"
 domain="${4:-$host}"
 check_timeout="${5:-$default_check_timeout}"
+tls_version="$6"
 
 starttls=""
 starttls_proto=""
@@ -93,10 +96,17 @@ if type idn > /dev/null 2>&1; then
 	domain="$(echo 	"${domain}" | idn 2>/dev/null || echo "${domain}"	)"
 fi
 
+# Verify if a TLS (or very old SSL) version is set, to append it a dash.
+if [[ ! -z "$tls_version" && (("$tls_version" == *"tls"* || "$tls_version" == *"ssl"* || "$tls_version" == *"dtls"*)) ]]; then
+	tls_version="-${tls_version}"
+else
+	tls_version=""
+fi
+
 # Get certificate
 # shellcheck disable=SC2086
 if ! output=$( echo \
-| timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" 2>/dev/null )
+| timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" $tls_version 2>/dev/null )
 then
 	error "Failed to get certificate"
 fi

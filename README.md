@@ -11,6 +11,7 @@ May be used standalone or with Zabbix. See the "Zabbix integration" section belo
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
+* `[tls_version]` optional, if it is not given a TLS version will be negotiated. Override the TLS version as you need, like: tls1, tls1_1, tls1_2, tls1_3, no_tls_1 and so on. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options.
 
 #### Return values
 
@@ -64,6 +65,28 @@ user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com
 # Check timeout is 10 seconds(default is 5)
 user@host:~$ ./ssl_cert_check.sh valid 127.0.0.1 443 example.com 10
 1
+
+# Check a certificate on an endpoint only accepting TLS 1.2 without setting a TLS version, which will use TLS 1.2 automatically.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10
+1
+
+# Check a certificate on an endpoint only accepting TLS 1.2 and use TLS 1.2, which is valid.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_2
+1
+
+# Check a certificate on an endpoint only accepting TLS 1.2, but use TLS 1.1, which is invalid.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_1
+-65535
+ERROR: Failed to get certificate
+
+# Check a certificate on an endpoint only accepting TLS 1.2, and do not use TLS 1.1, which is valid.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 no_tls1_1
+1
+
+# Check a certificate on an endpoint only accepting TLS 1.2, and do not use TLS 1.2, which is invalid.
+user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 no_tls1_2
+-65535
+ERROR: Failed to get certificate
 ```
 
 #### Zabbix integration
