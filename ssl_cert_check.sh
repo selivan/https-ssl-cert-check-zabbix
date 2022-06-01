@@ -10,19 +10,21 @@ function show_help() {
 	if [ -t 1 ]; then
 	cat >&2 << EOF
 
-Usage: $(basename "$0") expire|valid hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version[/sctp]]
+Usage: $(basename "$0") expire|valid hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version[/any/s_client/options]]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
-[port] is optional, default is 443
+[port] is optional, default is 443.
 
-[starttls protocol] is optional. Use protocol-specific message to switch to TLS communication. See "man s_client" for supported protocols, like: smtp, ftp, ldap
+[starttls protocol] is optional. Use protocol-specific message to switch to TLS communication: 587/smtp. See "man s_client" for supported protocols, like: smtp, ftp, ldap.
 
-[domain for TLS SNI] is optional, default is hostname
+[domain for TLS SNI] is optional, default is the hostname.
 
-[check_timeout] is optional, default is $default_check_timeout seconds
+[check_timeout] is optional, default is $default_check_timeout seconds.
 
-[tls_version[/sctp]] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: `tls1_2`, `tls1_3`, `no_tls1`, `dtls`. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use `man s_client` for supported TLS options. Use `dtls` options with `/sctp` suffix to set using SCTP for the transport protocol for DTLS: `dtls1_2/sctp`
+[tls_version] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: tls1, tls1_1, tls1_2, tls1_3. See the "TLS Version Options" section of [man openssl](https://www.openssl.org/docs/man3.0/man1/openssl.html) or [man s_client](https://www.openssl.org/docs/man3.0/man1/s_client.html) for the available options.
+
+[/any/s_client/options] Together or instead  of TLS protocol version you can add any s_client options without dashes and divided by /: dtls1_2/sctp/sctp_label_bug will become -dtls1_2 -sctp -sctp_label_bug options for s_client: use DTLS protocol with SCTP transport and incorrect older openssl way of computing endpoint-pair shared secrets.
 
 Output:
 
@@ -54,7 +56,7 @@ host="$2"
 port="${3:-443}"
 domain="${4:-$host}"
 check_timeout="${5:-$default_check_timeout}"
-tls_version="$6"
+other_options="$6"
 
 starttls=""
 starttls_proto=""
@@ -89,6 +91,22 @@ if [ -n "$starttls_proto" ]; then
 fi
 [[ "$check_timeout" =~ ^[0-9]+$ ]] || error "Check timeout should be a number"
 
+# Verify if a TLS version option is set, to append it with a dash.
+if [[ ! -z "$other_options" ]]; then
+
+	# Check for dtls/sctp option
+	IFS='/' read -r -a split <<< "${other_options}"
+	if [ ${#split[@]} -eq 1 ]; then
+		other_options="-$other_options"
+	else
+		for i in ${split[@]}; do
+			other_options="$other_options -$i"
+	fi
+
+else
+	other_options=""
+fi
+
 # Support for IDN(internationalized domain names) with Punycode
 # Requires libidn(https://www.gnu.org/software/libidn/)
 if type idn > /dev/null 2>&1; then
@@ -96,29 +114,10 @@ if type idn > /dev/null 2>&1; then
 	domain="$(echo 	"${domain}" | idn 2>/dev/null || echo "${domain}"	)"
 fi
 
-# Verify if a TLS version option is set, to append it with a dash.
-if [[ ! -z "$tls_version" && (("$tls_version" == *"tls"* || "$tls_version" == *"ssl"* || "$tls_version" == *"dtls"*)) ]]; then
-	tls_version="-${tls_version}"
-
-	# Check for dtls/sctp option
-	IFS='/' read -r -a split <<< "${tls_version}"
-	if [ ${#split[@]} -gt 1 ]; then
-		tls_version="${split[0]}"
-		if [ "${split[1]}" == "sctp" ]; then
-			tls_version="${split[0]} -sctp"
-		else
-			"tls_version="${split[0]}"
-		fi
-	fi
-
-else
-	tls_version=""
-fi
-
 # Get certificate
 # shellcheck disable=SC2086
 if ! output=$( echo \
-| timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" $tls_version 2>/dev/null )
+| timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" $other_options 2>/dev/null )
 then
 	error "Failed to get certificate"
 fi

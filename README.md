@@ -25,14 +25,15 @@ user@host:~$ ./ssl_cert_check.sh expire 74.125.131.138 443 google.com 15 tls1_2
 
 #### Usage
 
-`ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)] [tls_version]`
+`ssl_cert_check.sh valid|expire <hostname or IP> [port[/starttls protocol]] [domain for TLS SNI] [check timeout (seconds)] [tls_version[/any/s_client/options]]`
 
-* `[port]` optional, default is 443
-* `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
+* `[port]` optional, default is 443.
+* `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication: `587/smtp`. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
-* `[check timeout (seconds)]` optional, default is 5 seconds
-* `[tls_version]` optional, if it is not given a TLS version will be negotiated. Override the TLS version as you need, like: `tls1_2`, `tls1_3`, `no_tls1`, `dtls` and so on. See the "TLS Version Options" section of [man openssl](https://www.openssl.org/docs/man3.0/man1/openssl.html) or [man s_client](https://www.openssl.org/docs/man3.0/man1/s_client.html) for the available options.
+* `[check timeout (seconds)]` optional, default is 5 seconds.
+* `[tls_version]` optional, if not given a TLS version will be auto negotiated. Override the TLS version as you need, like: `tls1_2`, `tls1_3`, `no_tls1`, `dtls` and so on. See the "TLS Version Options" section of [man openssl](https://www.openssl.org/docs/man3.0/man1/openssl.html) or [man s_client](https://www.openssl.org/docs/man3.0/man1/s_client.html) for the available options.
+* `[/any/s_client/options]` Together or instead of TLS protocol version you can add any `s_client` options without dashes and divided by `/`: `dtls1_2/sctp/sctp_label_bug` will become `-dtls1_2 -sctp -sctp_label_bug` options for `s_client`: use DTLS protocol with SCTP transport and incorrect older `openssl` way of computing endpoint-pair shared secrets.
 
 #### Return values
 
