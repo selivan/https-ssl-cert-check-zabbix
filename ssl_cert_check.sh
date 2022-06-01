@@ -97,7 +97,7 @@ if type idn > /dev/null 2>&1; then
 fi
 
 # Verify if a TLS (or very old SSL) version is set, to append it a dash.
-if [[ ! -z "$tls_version" && (("$tls_version" == *"tls"* || "$tls_version" == *"ssl"*)) ]]; then
+if [[ ! -z "$tls_version" && (("$tls_version" == *"tls"* || "$tls_version" == *"ssl"* || "$tls_version" == *"dtls"*)) ]]; then
 	tls_version="-${tls_version}"
 else
 	tls_version=""
