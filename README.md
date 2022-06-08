@@ -110,6 +110,15 @@ user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.
 user@host:~$ ./ssl_cert_check.sh valid tls-v1-2.badssl.com 1012 tls-v1-2.badssl.com 10 tls1_1
 -65535
 ERROR: Failed to get certificate
+
+# Check a self-signed certificate endpoint using TLS 1.2, without assuming self-signed is valid.
+user@host:~$ ./ssl_cert_check.sh json self-signed.badssl.com 443 self-signed.badssl.com 10 tls1_2
+{"expire_days": 708, "valid": 0, "return_code": 18, "return_text": "self signed certificate"}
+
+# Check a self-signed certificate endpoint using TLS 1.2, with assuming self-signed is valid.
+user@host:~$ ./ssl_cert_check.sh json self-signed.badssl.com 443 self-signed.badssl.com 10 tls1_2,self_signed_ok
+{"expire_days": 708, "valid": 1, "return_code": 18, "return_text": "self signed certificate"}
+
 ```
 
 #### Zabbix integration
