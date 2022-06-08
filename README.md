@@ -36,7 +36,7 @@ user@host:~$ ./ssl_cert_check.sh json google.com
 * `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
-* `[tls_version,[self_signed_ok]]` = predefined options, optional.
+* `[tls_version,[self_signed_ok]]` predefined options comma (`,`) separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
 	* `[tls_version]` if it is not given a TLS version will be negotiated. Override the TLS version as you need, like: `tls1_2`, `tls1_3`, `no_tls1`, `dtls` and so on. See the "TLS Version Options" section of [man openssl](https://www.openssl.org/docs/man3.0/man1/openssl.html) or [man s_client](https://www.openssl.org/docs/man3.0/man1/s_client.html) for the available options.
 	* `[self_signed_ok]` is optional. When this flag is set all self-signed certificates will be seen as valid. Otherwise these will be rendered invalid. It will allow OpenSSL return codes `18` and `19`. See the `Diagnostics` section at https://www.openssl.org/docs/man1.0.2/man1/verify.html.
 * `[ s_client_option1 ] [ ... ] [ s_client_optionN ]` is optional. But all other parameters are required to be set. Everything you append after all parameters will be added/appended on the OpenSSL s_client command. See all s_client options at https://www.openssl.org/docs/man1.0.2/man1/s_client.html.
