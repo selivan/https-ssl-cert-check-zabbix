@@ -13,7 +13,7 @@ function show_help() {
 	if [ -t 1 ]; then
 	cat >&2 << EOF
 
-Usage: $(basename "$0") expire|valid|json hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version,[self_signed_ok]] [ s_client_option1 ] [ ... ] [ s_client_optionN ]
+Usage: $(basename "$0") expire|valid|json hostname|ip [port[/starttls protocol]] [domain for TLS SNI] [check_timeout] [tls_version|tls_auto,[self_signed_ok]] [ s_client_option1 ] [ ... ] [ s_client_optionN ]
 
 Script checks SSL certificate expiration and validity for HTTPS.
 
@@ -25,10 +25,12 @@ Script checks SSL certificate expiration and validity for HTTPS.
 
 [check_timeout] is optional, default is $default_check_timeout seconds
 
-[tls_version,[self_signed_ok]] predefined options comma (`,`) separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
+[tls_version|tls_auto,[self_signed_ok]] predefined options comma (`,`) separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
   * [tls_version] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: tls1, tls1_1, tls1_2, tls1_3. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use "man s_client" for supported TLS options.
 
   * [self_signed_ok] is optional. When this flag is set all self-signed certificates will be seen as 'valid'. It will allow OpenSSL return codes 18 and 19. See the 'Diagnostics' section at https://www.openssl.org/docs/man1.0.2/man1/verify.html.
+
+  * [tls_auto] means auto negotiating TLS protocol. That is the default, this option is used as separator if you want to speficy additional s_client options after it.
 
 [ s_client_option1 ] [ ... ] [ s_client_optionN ] is optional. But all other parameters are required to be set. Everything you append after all parameters will be added/appended on the OpenSSL s_client command. See all s_client options at https://www.openssl.org/docs/man1.0.2/man1/s_client.html.
 
@@ -141,7 +143,9 @@ for opt in "${split_options[@]}"; do
 	fi
 
 	# Look for a TLS, SSL or DTLS flag and set the flag
-	if [[ "${opt}" == *"tls"* || "${opt}" == *"ssl"* || "${opt}" == *"dtls"* ]]; then
+	if [[ "${opt}" == "tls_auto" ]]; then
+		true
+	elif [[ "${opt}" == *"tls"* || "${opt}" == *"ssl"* || "${opt}" == *"dtls"* ]]; then
 		tls_version="-${opt}"
 	fi
 done
