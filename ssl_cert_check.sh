@@ -54,7 +54,9 @@ Output:
 	* valid: see 'valid' check
 	* return_code: the OpenSSL return code
 	* return_text: the OpenSSL return text which gives helpful insights
-  * $error_code	failed to get certificate or incorrect parameters
+  * JSON object with the error code and message
+	* error_code: $error_code
+	* error_message: The output of the error message
 
 Return code is always 0, otherwise zabbix agent fails to get item value and triggers would not work. Note: error messages are not printed when running not on a terninal, so that script result from zabbix is always a correct integer.
 EOF
@@ -62,7 +64,14 @@ EOF
 
 }
 
-function error() { echo $error_code; if [ -t 1 ]; then echo "ERROR: $*" >&2; fi; exit 0; }
+function error() {
+	if [ $check_type == "json" ]; then
+		echo "{\"error_code\": $error_code, \"error_message\": \"$*\"}"
+		exit 0
+	else
+		echo $error_code; if [ -t 1 ]; then echo "ERROR: $*" >&2; fi; exit 0;
+	fi
+}
 
 function result() { echo "$1"; exit 0; }
 
