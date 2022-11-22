@@ -58,7 +58,9 @@ user@host:~$ ./ssl_cert_check.sh json google.com
 	* `valid`: see `valid` check
 	* `return_code`: the OpenSSL return code
 	* `return_text`: the OpenSSL return text which gives helpful insights
-* $error_code	failed to get certificate or incorrect parameters
+* JSON object with the error code and message
+    * `error_code`: $error_code
+    * `error_message`: The output of the error message
 
 Exit code is always 0, otherwise zabbix agent fails to get the item value.
 
