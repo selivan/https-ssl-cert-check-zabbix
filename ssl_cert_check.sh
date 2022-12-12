@@ -147,8 +147,8 @@ tls_version=""
 for opt in "${split_options[@]}"; do
 	# Look for the flag 'self_signed_ok' to set a Self Signed certificate as valid.
 	if [ "${opt}" = "self_signed_ok" ]; then
-		# Add status codes '18' and '19' as valid in the list. See the 'Diagnostics' section at https://www.openssl.org/docs/man1.0.2/man1/verify.html
-		openssl_valid_codes+=(18 19)
+		# Add status codes '18', '19', '20' and '21' as valid in the list. See the 'Diagnostics' section at https://www.openssl.org/docs/man1.0.2/man1/verify.html
+		openssl_valid_codes+=(18 19 20 21)
 	fi
 
 	# Look for a TLS, SSL or DTLS flag and set the flag
