@@ -25,7 +25,7 @@ Script checks SSL certificate expiration and validity for HTTPS.
 
 [check_timeout] is optional, default is $default_check_timeout seconds
 
-[tls_version|tls_auto,[self_signed_ok]] predefined options comma (`,`) separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
+[tls_version|tls_auto,[self_signed_ok]] predefined options comma (',') separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
   * [tls_version] is optional, no default is set. This will auto negotiate the TLS protocol and choose the TLS version itself. Override the TLS version as you need: tls1, tls1_1, tls1_2, tls1_3. See either the [TLS Version Options](https://www.openssl.org/docs/man3.0/man1/openssl.html) section for the TLS options or use "man s_client" for supported TLS options.
 
   * [self_signed_ok] is optional. When this flag is set all self-signed certificates will be seen as 'valid'. It will allow OpenSSL return codes 18, 19, 20 and 21. See the 'Diagnostics' section at https://www.openssl.org/docs/man1.0.2/man1/verify.html.
