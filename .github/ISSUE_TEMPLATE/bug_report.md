@@ -30,6 +30,8 @@ Operating System: <!--- OS you are using to run the script  -->
 $domain    TLS/SSL certificate domain name
 $host      host address, usually the same as `$domain`
 $port      port to check TLS/SSL, usually 443
+
+Note: please run the diagnostics command from the same host where the bug occurs.
 -->
 
 `openssl s_client -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port"` says:
