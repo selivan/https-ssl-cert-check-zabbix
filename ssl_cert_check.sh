@@ -161,9 +161,13 @@ done
 
 # Get certificate
 # shellcheck disable=SC2086
-if ! output=$( echo \
+output=$( echo \
 | timeout "$check_timeout" openssl s_client $starttls $starttls_proto -servername "$domain" -verify_hostname "$domain" -connect "$host":"$port" $tls_version $s_client_options 2>/dev/null )
-then
+
+# Sometimes s_client may return non-zero exit code even if it got the certificate.
+# See https://github.com/selivan/https-ssl-cert-check-zabbix/issues/44
+# So instead we check that output looks valid.
+if ! echo "$output" | grep -q -E '^ *Verify return code:'; then
 	error "Failed to get certificate"
 fi
 
