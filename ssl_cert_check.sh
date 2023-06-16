@@ -80,13 +80,15 @@ function get_expire_days() {
 	| openssl x509 -noout -dates \
 	| grep '^notAfter' | cut -d'=' -f2 )
 
-	expire_date_epoch=$(date -d "$expire_date" +%s) || error "Failed to get expire date"
-	current_date_epoch=$(date +%s)
+	expire_date_epoch=$($datecmd -d "$expire_date" +%s) || error "Failed to get expire date"
+	current_date_epoch=$($datecmd +%s)
 	days_left=$(( (expire_date_epoch - current_date_epoch)/(3600*24) ))
 
 	echo $days_left
 }
 
+# date command
+datecmd="date";
 # Arguments
 check_type="$1"
 host="$2"
@@ -117,6 +119,10 @@ done
 # Check that busybox date isn't used: it does not support requited date format
 if date --version 2>&1 | grep -qi 'busybox'; then
 	error "Busybox date does not support parsing required date format. date from coreutils package is required"
+elif date --version 2>&1 | grep -qi "date: illegal option"; then
+	# if this is macOS date, see if gdate exists and use this one
+	type gdate >/dev/null || error "macOS date does not support -d and no GNU date installed";
+	datecmd="gdate";
 fi
 
 # Check arguments
