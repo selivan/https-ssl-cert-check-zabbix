@@ -1,0 +1,14 @@
+{ "data": [
+	{
+		"{#IPADDR}": "www.zabbix.com",
+		"{#SSLPORT}": "443",
+		"{#SSLDOMAIN}": "www.zabbix.com",
+		"{#TIMEOUT}": "30"
+	},
+	{
+		"{#IPADDR}": "docs.docker.com",
+		"{#SSLPORT}": "443",
+		"{#SSLDOMAIN}": "docs.docker.com",
+		"{#TIMEOUT}": "30"
+	}
+]}

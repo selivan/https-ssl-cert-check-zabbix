@@ -1,71 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>4.4</version>
-    <date>2021-04-18T15:28:09Z</date>
-    <groups>
-        <group>
+    <version>6.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
             <name>Templates/Applications</name>
-        </group>
-    </groups>
+        </template_group>
+    </template_groups>
     <templates>
         <template>
-            <template>Template Web SSL Certificate Monitor</template>
-            <name>Template Web SSL Certificate Monitor</name>
+            <uuid>faf73082ee7c476e971ea8e50c87b8dc</uuid>
+            <template>Template SSL Certificate Monitoring</template>
+            <name>Template SSL Certificate Monitoring</name>
             <groups>
                 <group>
                     <name>Templates/Applications</name>
                 </group>
             </groups>
-            <applications>
-                <application>
-                    <name>Certificates</name>
-                </application>
-                <application>
-                    <name>ssl_expire</name>
-                </application>
-                <application>
-                    <name>ssl_valid</name>
-                </application>
-            </applications>
             <items>
                 <item>
+                    <uuid>c429dd8ab2af48ff8d3ecc800b596892</uuid>
                     <name>ssl_cert_check_expire</name>
                     <key>ssl_cert_check_expire[{$IPADDR},{$SSLPORT},{$SSLDOMAIN},{$TIMEOUT}]</key>
                     <delay>{$UPDATEINTERVAL}</delay>
                     <history>7d</history>
                     <trends>14d</trends>
                     <units>d</units>
-                    <applications>
-                        <application>
-                            <name>ssl_expire</name>
-                        </application>
-                    </applications>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>ssl_expire</value>
+                        </tag>
+                    </tags>
                     <triggers>
                         <trigger>
-                            <expression>{last(#3,3)}&lt;{$EXPIRESWITHIN}</expression>
-                            <name>Certificate expires soon, {ITEM.VALUE} days left</name>
-                            <priority>WARNING</priority>
+                            <uuid>d2f958783f6646cbbbe5c7f304f03311</uuid>
+                            <expression>last(/Template SSL Certificate Monitoring/ssl_cert_check_expire[{$IPADDR},{$SSLPORT},{$SSLDOMAIN},{$TIMEOUT}])&lt;{$EXPIRESWITHIN}</expression>
+                            <name>SSL certificate expires soon, {ITEM.VALUE} days left</name>
+                            <priority>AVERAGE</priority>
                         </trigger>
                     </triggers>
                 </item>
                 <item>
+                    <uuid>8de27012be284322b68cf9a19cf65a17</uuid>
                     <name>ssl_cert_check_valid</name>
                     <key>ssl_cert_check_valid[{$IPADDR},{$SSLPORT},{$SSLDOMAIN},{$TIMEOUT}]</key>
                     <delay>{$UPDATEINTERVAL}</delay>
                     <history>7d</history>
                     <trends>14d</trends>
-                    <applications>
-                        <application>
-                            <name>ssl_valid</name>
-                        </application>
-                    </applications>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>ssl_valid</value>
+                        </tag>
+                    </tags>
                     <triggers>
                         <trigger>
-                            <expression>{last(#3,5)}=0</expression>
-                            <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
-                            <recovery_expression>{last(#3,5)}=1</recovery_expression>
-                            <name>Certificate validation failed</name>
-                            <priority>WARNING</priority>
+                            <uuid>81cd1ee8eda946ebb216e90c1bffbcd1</uuid>
+                            <expression>last(/Template SSL Certificate Monitoring/ssl_cert_check_valid[{$IPADDR},{$SSLPORT},{$SSLDOMAIN},{$TIMEOUT}])&lt;&gt;1</expression>
+                            <name>SSL certificate invalid</name>
+                            <priority>DISASTER</priority>
                         </trigger>
                     </triggers>
                 </item>
@@ -78,7 +72,7 @@
                 </macro>
                 <macro>
                     <macro>{$IPADDR}</macro>
-                    <value>140.82.121.4</value>
+                    <value>github.com</value>
                     <description>Server IP address</description>
                 </macro>
                 <macro>
@@ -98,7 +92,7 @@
                 </macro>
                 <macro>
                     <macro>{$UPDATEINTERVAL}</macro>
-                    <value>12h</value>
+                    <value>30</value>
                     <description>How often to update certificate information</description>
                 </macro>
             </macros>

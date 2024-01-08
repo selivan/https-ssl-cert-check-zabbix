@@ -1,4 +1,6 @@
-Script to check validity and expiration of TLS/SSL certificate on remote host. Supports: TLS SNI and STARTTLS for protocols like SMTP; internationalized domain names with Punycode(uses [libidn](https://www.gnu.org/software/libidn/)); allowing self-signed certs as valid; JSON output; supports any additional `s_client` [options](https://www.openssl.org/docs/manmaster/man1/openssl-s_client.html).
+Script to check validity and expiration of TLS/SSL certificate on remote host.
+
+Supports: TLS SNI and STARTTLS for protocols like SMTP; internationalized domain names with [Punycode](https://en.wikipedia.org/wiki/Punycode)(uses [libidn](https://www.gnu.org/software/libidn/)); allowing self-signed certs as valid; JSON output; supports any additional `s_client` [options](https://www.openssl.org/docs/manmaster/man1/openssl-s_client.html).
 
 May be used standalone or with Zabbix. See the "Zabbix integration" section below.
 
@@ -35,7 +37,7 @@ user@host:~$ ./ssl_cert_check.sh json google.com
 
 * `[port]` optional, default is 443
 * `[starttls protocol]` optional, use protocol-specific message to switch to TLS communication. See `man s_client` option `-starttls` for supported protocols, like `smtp`, `ftp`, `ldap`.
-* `[domain for TLS SNI]` optional, default is `<hostname or IP>`.  
+* `[domain for TLS SNI]` optional, default is `<hostname or IP>`.
 [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)*(Server Name Indication) is used to specify certificate domain name if it differs from the hostname.*
 * `[check timeout (seconds)]` optional, default is 5 seconds
 * `[tls_version|tls_auto,[self_signed_ok]]` predefined options comma (`,`) separated, flag is optional. Set what is needed, no order of parameters is present of the available options below.
@@ -129,20 +131,9 @@ user@host:~$ ./ssl_cert_check.sh json self-signed.badssl.com 443 self-signed.bad
 
 #### Zabbix integration
 
-Example of Zabbix [user parameters](https://www.zabbix.com/documentation/current/manual/config/items/userparameters) is in `userparameters_ssl_cert_check.conf`.
+Example of Zabbix [user parameters](https://www.zabbix.com/documentation/current/manual/config/items/userparameters): `userparameters_ssl_cert_check.conf` in `zabbix_integration_examples` directory.
 
-You can write your own template or use one of two example templates in `zabbix_template_examples` directory.
-
-`basic` - basic template and userparameter for monitoring of one SSL cert per host
-
-* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d on host
-* import template in zabbix server, assign to host, fill macros on that host
-
-`advanced` - advanced template and userparameter for monitoring of multiple ssl certs per hosts
-
-* copy userparameters_ssl_cert_check.conf file into /etc/zabbix/zabbix_agentd.d
-* copy and modify ssl_cert_list into /etc/zabbix/scripts/ssl_cert_list
-* import template in zabbix server, assign to host, either run discovery or wait
+You can write your own template or use one of example templates in `zabbix_integration_examples`. See their description in [README.md](zabbix_integration_examples/README.md).
 
 #### Support for Internationalized Domain Names with Punycode
 

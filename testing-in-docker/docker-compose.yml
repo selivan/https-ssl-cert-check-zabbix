@@ -1,0 +1,60 @@
+version: "3.8" # informative, not used to select specification version, latest available is used
+name: zabbix # prefix for container and network names; exposed as $COMPOSE_PROJECT_NAME
+
+x-logging: &logging
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: 3
+
+services:
+  mysql-server:
+    image: "mysql:8.0-oracle"
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_bin
+    environment:
+      MYSQL_DATABASE: "zabbix"
+      MYSQL_USER: "zabbix"
+      MYSQL_PASSWORD: "zabbix_pwd"
+      MYSQL_ROOT_PASSWORD: "root_pwd"
+    logging: *logging
+  zabbix-server:
+    image: "zabbix/zabbix-server-mysql"
+    depends_on: # start/stop dependencies
+      - mysql-server
+    # expose: # visible to other containers, not outside
+    #   - "1984/udp"
+    environment:
+      DB_SERVER_HOST: mysql-server
+      MYSQL_DATABASE: "zabbix"
+      MYSQL_USER: "zabbix"
+      MYSQL_PASSWORD: "zabbix_pwd"
+      MYSQL_ROOT_PASSWORD: "root_pwd"
+      ZBX_SERVER_NAME: Zabbix in Docker
+    expose:
+      - "10051:10051/tcp"
+    logging: *logging
+  zabbix-web:
+    image: "zabbix/zabbix-web-nginx-mysql"
+    depends_on: # start/stop dependencies
+      - mysql-server
+      - zabbix-server
+    environment:
+      DB_SERVER_HOST: mysql-server
+      MYSQL_DATABASE: "zabbix"
+      MYSQL_USER: "zabbix"
+      MYSQL_PASSWORD: "zabbix_pwd"
+      MYSQL_ROOT_PASSWORD: "root_pwd"
+      ZBX_SERVER_HOST: zabbix-server
+    ports:
+      - "8080:8080/tcp"
+  zabbix-agent:
+    image: "zabbix/zabbix-agent"
+    volumes:
+      - ../zabbix_integration_examples/:/etc/zabbix/zabbix_agentd.d:ro
+      - ../:/usr/local/bin:ro
+    environment:
+      ZBX_SERVER_HOST: zabbix-server
+      ZBX_HOSTNAME: "zabbix-agent"
+    expose:
+      - "10050:10050/tcp"
+    logging: *logging

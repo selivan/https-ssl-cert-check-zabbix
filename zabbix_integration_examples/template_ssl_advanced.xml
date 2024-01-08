@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
+            <name>Templates/Applications</name>
+        </template_group>
+    </template_groups>
+    <templates>
+        <template>
+            <uuid>16e90d0c09ec4b32abcef88ed2e76097</uuid>
+            <template>Template SSL Certificate Monitoring with Discovery</template>
+            <name>Template SSL Certificate Monitoring with Discovery</name>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>d4f0239b0a28405286fcd41cfaca244e</uuid>
+                    <name>SSL Certficates</name>
+                    <key>ssl_cert_list</key>
+                    <delay>1h</delay>
+                    <lifetime>1d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>e8bfc5174dcf4f2c82b8db641d1af2bd</uuid>
+                            <name>SSL cert expiration on [{#IPADDR},{#SSLPORT},{#SSLDOMAIN}]</name>
+                            <key>ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}]</key>
+                            <delay>1h</delay>
+                            <units>Days</units>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>ssl_monitoring</value>
+                                </tag>
+                            </tags>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>1b983320bfe14962ae843ac51486d779</uuid>
+                                    <expression>last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])&lt;2</expression>
+                                    <name>SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 2 days</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>b64473beace64a5ca09242345ac845b9</uuid>
+                                    <expression>last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])&lt;7</expression>
+                                    <name>SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 7 days</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>a3ff6f34bfa3463189f67ebfeb8cfbb5</uuid>
+                                    <expression>last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])&lt;30</expression>
+                                    <name>SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 30 days</name>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>691eaee700d647a7b4a4fec53066979a</uuid>
+                            <name>SSL cert validity on [{#IPADDR},{#SSLPORT},{#SSLDOMAIN}]</name>
+                            <key>ssl_cert_check_valid[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}]</key>
+                            <delay>1h</delay>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>ssl_monitoring</value>
+                                </tag>
+                            </tags>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>31a9b9c7107240ef8f047cd3bd09f98f</uuid>
+                                    <expression>last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_valid[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])&lt;&gt;1</expression>
+                                    <name>SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} is invalid</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
